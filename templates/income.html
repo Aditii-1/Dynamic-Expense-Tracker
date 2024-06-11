@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div id="mymodal">
+            <div class="modal-content"> 
+                <form action="{{ url_for('insert_income') }}" method="POST">
+                    <div class="form-group">
+                        <label><b>Description:</b></label>
+                        <input type="text" class="form-control" name="description" placeholder="Enter description" required="1"/>
+                    </div>
+                    <div class="form-group">
+                        <label><b>Amount:</b></label>
+                        <input type="number" class="form-control" name="amount" placeholder="Enter amount" required="1"/>
+                    </div>
+                    <div class="form-group">
+                        <label><b>Date:</b></label>
+                        <input type="date" class="form-control" name="date" required="1"/>
+                    </div>
+                    <div class="form-group">
+                        <label><b>Category:</b></label>
+                        <select class="form-control" name="category">
+                            <option value="Salary">Salary</option>
+                            <option value="Bonus">Bonus</option>
+                            <option value="Investment">Investment</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label><b>Pay-Mode:</b></label>
+                        <select class="form-control" name="pay_mode">
+                            <option value="Cash">Cash</option>
+                            <option value="Bank Transfer">Bank Transfer</option>
+                            <option value="PayPal">PayPal</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="sub">
+                        <button class="btn-fn" type="submit">Add Income</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+ 
+        <table class="table table-hover">
+            <tr>
+                <th><b>Description</b></th>
+                <th><b>Amount</b></th>
+                <th><b>Date</b></th>
+                <th><b>Category</b></th>
+                <th><b>Pay-Mode</b></th>
+                <th><b>Edit</b></th>
+                <th><b>Delete</b></th>
+            </tr>
+            {% for row in incomes %}
+            <tr>
+                <td>{{ row.description }}</td>
+                <td>{{ row.amount }}</td>
+                <td>{{ row.date }}</td>
+                <td>{{ row.category }}</td>
+                <td>{{ row.pay_mode }}</td>
+                <td><a href="#" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{ row.id }}">Edit</a></td>
+                <td><a href="/delete_income/{{row.id}}" class="btn btn-danger btn-xs" onclick="return confirm('Are you sure to delete?')">Delete</a></td>
+            </tr>
+            {% endfor %}
+
+            {% for row in incomes %}
+            <div id="modaledit{{ row.id }}" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Update Income</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{ url_for('update_income', income_id=row.id) }}" method="POST">
+                                <input type="hidden" name="id" value="{{ row.id }}">
+                                <div class="form-group">
+                                    <label><b>Description:</b></label>
+                                    <input type="text" class="form-control" name="description" value="{{ row.description }}">
+                                </div>
+                                <div class="form-group">
+                                    <label><b>Amount:</b></label>
+                                    <input type="number" class="form-control" name="amount" value="{{ row.amount }}">
+                                </div>
+                                <div class="form-group">
+                                    <label><b>Date:</b></label>
+                                    <input type="date" class="form-control" name="date" value="{{ row.date }}">
+                                </div>
+                                <div class="form-group">
+                                    <label><b>Category:</b></label>
+                                    <select class="form-control" name="category">
+                                        <option value="Salary" {% if row.category == 'Salary' %}selected{% endif %}>Salary</option>
+                                        <option value="Bonus" {% if row.category == 'Bonus' %}selected{% endif %}>Bonus</option>
+                                        <option value="Investment" {% if row.category == 'Investment' %}selected{% endif %}>Investment</option>
+                                        <option value="Other" {% if row.category == 'Other' %}selected{% endif %}>Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label><b>Pay-Mode:</b></label>
+                                    <select class="form-control" name="pay_mode">
+                                        <option value="Cash" {% if row.pay_mode == 'Cash' %}selected{% endif %}>Cash</option>
+                                        <option value="Bank Transfer" {% if row.pay_mode == 'Bank Transfer' %}selected{% endif %}>Bank Transfer</option>
+                                        <option value="PayPal" {% if row.pay_mode == 'PayPal' %}selected{% endif %}>PayPal</option>
+                                        <option value="Other" {% if row.pay_mode == 'Other' %}selected{% endif %}>Other</option>
+                                    </select>
+                                </div>
+                                <div class="sub">
+                                    <button class="btn btn-warning" type="submit">Update</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% endblock %}

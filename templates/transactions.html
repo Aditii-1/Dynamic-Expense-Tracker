@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<!-- edited -->
+<div class="container">
+    <div class="balance_box bal">
+        <h2>&#128176;BALANCE</h2>
+        <p class="balance-amt">{{ balance }}</p>
+    </div>
+    <div class="balance_box balance_section">
+        <div class="income-box">
+            <h2>&#128178;INCOME</h2>
+            <p class="income-amt">{{ income_amount }}</p>
+        </div>
+
+        <div class="expense-box">
+            <h2>&#128179;EXPENSE</h2>
+            <p class="expense-amt">{{ expense_amount }}</p>
+        </div>
+    </div>
+
+    <hr class="balance_divider">
+
+    <h2>HISTORY</h2>
+    <table class="table table-hover table-responsive">
+        <tr>
+            <th>Description</th>
+            <th>Amount</th>
+            <th>Date</th>
+            <th>Category</th>
+            <th>Pay-Mode</th>
+            <th>Type</th>
+        </tr>
+        {% for row in transactions %}
+        <tr>
+            <td>{{ row.description }}</td>
+            <td>
+                {% if row.tran_type == 'income' %}
+                <span class="amt_in">+ {{ row.amount }}</span>
+                {% else %}
+                <span class="amt_ex">- {{ row.amount }}</span>
+                {% endif %}
+            </td>
+            <td>{{ row.date }}</td>
+            <td>{{ row.category }}</td>
+            <td>{{ row.pay_mode }}</td>
+            <td>{{ row.tran_type }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <!-- Add Chart.js Histogram -->
+    <!-- Add Chart.js Histogram -->
+    <canvas id="histogram" width="4" height="2"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get data for histogram
+        var data = {
+            labels: [{% for row in transactions %}"{{ row.category }}", {% endfor %}],
+            datasets: [{
+                label: 'Amount',
+                data: [{% for row in transactions %}{{ row.amount }}, {% endfor %}],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)', // Red
+                    'rgba(54, 162, 235, 0.2)', // Blue
+                    'rgba(255, 206, 86, 0.2)', // Yellow
+                    'rgba(75, 192, 192, 0.2)', // Green
+                    // Add more colors as needed
+                ],
+                borderColor: 'rgba(0, 0, 0, 1)',
+                borderWidth: 1
+            }]
+        };
+
+        // Set up options for histogram
+        var options = {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        };
+
+        // Get canvas element
+        var ctx = document.getElementById('histogram').getContext('2d');
+
+        // Create histogram
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: data,
+            options: options
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,571 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 12pt;
+}
+
+body {
+  width: 100%;
+  height: 100vh;
+  font-family: "Segoe UI", Tahoma, Verdana, sans-serif;
+  background: white;
+}
+
+.container {
+  padding-top: 10px;
+  background-color: rgba(255, 255, 255, 0.88);
+  border-radius: 8px;
+}
+
+.logo{
+  font-size: 1.8rem;
+}
+
+.logo,.nav-items > a{
+  text-decoration: none;
+}
+
+nav{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgb(255, 250, 250);
+}
+
+nav a {
+  width: 100%;
+  height: 100%;
+  padding: 0px 30px;
+  color: rgb(0, 0, 0);
+  display: flex;
+  align-items: center;
+  font-size: 1.2rem;
+}
+
+.main-nav{
+  width: 100%;
+  padding: 0.5rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  box-shadow: 8px 8px 8px rgba(0, 0, 0, 0.1);
+}
+
+.sub-nav{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav-items > a:hover {
+  color: #0836be;
+  transform: scale(1.1);
+}
+
+h1 {
+  font-size: 2px;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.924);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h2 {
+  text-align: center;
+}
+
+th,td {
+  padding: 2px;
+  border-bottom: 1px solid #cccccc46;
+  text-align: left;
+}
+
+th {
+  background-color: #e3dee08b;
+}
+
+div.row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50%;
+}
+
+.btn-fn {
+  display: inline-block;
+  width: 20%;
+  padding: 10px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #001a36;
+  border-radius: 20px !important;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.sub {
+  text-align: center;
+  margin: 5px;
+}
+
+.btn-fn:hover {
+  background-color: #031b34;
+}
+
+.form-container {
+  margin-top: 60px;
+}
+
+.form-group {
+  display: flex;
+  align-items: center;
+  margin: 10px;
+}
+
+.form-group label {
+  margin-right: 10px;
+  width: 120px;
+}
+
+.table {
+  border: 2px solid #ddd;
+}
+
+.balance_section {
+  display: flex;
+  justify-content: space-around;
+  margin: 20px;
+  border-radius: 5px;
+  flex-wrap: wrap; /* Allow flex items to wrap to the next line */
+}
+
+.balance_box {
+  background-color: #f5f5f5;
+  border-radius: 5px;
+  padding: 20px;
+  text-align: center;
+  flex: 1 1 300px; /* Allow boxes to grow and shrink, with a base width of 300px */
+  margin: 10px; /* Add margin to ensure spacing between boxes */
+}
+
+/* Media query for screens with a max width of 320px */
+@media (max-width: 320px) {
+  .balance_section {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .balance_box {
+    width: 100%;
+    margin: 10px 0; /* Reduce horizontal margin to fit the screen */
+  }
+}
+
+
+
+.balance-amt {
+  color: rgb(0, 0, 0);
+  font-size: 2rem;
+  font-weight: 500;
+}
+.income-amt {
+  color: green;
+  font-size: 2.2rem;
+}
+
+.expense-amt {
+  color: red;
+  font-size: 2.2rem;
+}
+
+.amt_in {
+  color: green;
+}
+
+.amt_ex {
+  color: red;
+}
+
+.bal {
+  text-align: center;
+  margin: 0 auto;
+  font-size: 25px;
+}
+
+
+
+.foot{
+  width: 100%;
+  height: 1.5rem;
+  background-color: #333;
+  color: white;
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 💡START : home.html CSS */
+.headname{
+  padding: 0.5rem 0rem;
+  font-size: 2.5rem;
+}
+.cover-box{
+  width: 100%;
+  height: auto;
+  padding: 1rem 0rem;
+  display: flex;
+  justify-content: center;
+  user-select: none;
+  /* align-items: center; */
+}
+.hr-line{
+  background-color: rgb(0, 0, 0);
+  height: 3px;
+}
+.welcome{
+  text-align: center;
+}
+.para,.para > li{
+  font-size: 1.3rem;
+}
+.hidden,.ham-box-hidden{
+  display: none;
+}
+@media screen and (max-width: 800px) {
+  .main-nav{
+    display: none;
+  }
+  .hidden{
+    display: unset;
+  }
+  .ham-nav{
+    width: 100%;
+    padding: 0.5rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    box-shadow: 8px 8px 8px rgba(0, 0, 0, 0.1);
+    /* background-color: red; */
+  }
+  .ham-box{
+    width: 10rem;
+    height: auto;
+    padding: 0.5rem;
+    
+    font-size: 1.2rem;
+    /* color: black; */
+    background-color: lightgray;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+    position: fixed;
+    top: 70px;
+    right: 1rem;
+    z-index: 100;
+
+    border-radius: 10px;
+  }
+  .ham-box-hidden{
+    display: none;
+  }
+  .nav-items > a{
+    color: black;
+    font-weight: 600;
+  }
+  .ham-btn{
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .headname{
+    font-size: 2rem;
+  }
+  .para,.para > li{
+    font-size: 1.1rem;
+  }
+}
+/* 💡END : home.html CSS */
+
+/* For form responsiveness */
+/* Custom CSS for responsiveness */
+
+/* Ensure the container and modal widths are 100% of the viewport width on small screens */
+.container, .row, #mymodal {
+  max-width: 100%;
+  width: 100%;
+}
+
+.modal-dialog {
+  width: 100%;
+  margin: 0;
+}
+
+.modal-content {
+  width: 100%;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+/* Adjustments for form elements */
+.form-control {
+  width: 100%;
+}
+
+/* Media queries for specific breakpoints */
+@media (max-width: 767.98px) {
+  .table {
+      width: 100%;
+      margin-bottom: 1rem;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      -ms-overflow-style: -ms-autohiding-scrollbar;
+  }
+  .table th, .table td {
+      white-space: nowrap;
+  }
+
+  .modal-dialog {
+      margin: 0 10px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .btn-fn, .btn {
+      width: 100%;
+      margin-bottom: 10px;
+  }
+
+  .modal-header .close {
+      padding: 1rem;
+      margin: -1rem -1rem -1rem auto;
+  }
+
+  .form-group label {
+      display: block;
+  }
+}
+
+/* Extra small devices (phones, less than 576px) */
+@media (max-width: 575.98px) {
+  .modal-content {
+      padding: 10px;
+  }
+  
+  /* Making the table responsive */
+  .table-responsive {
+      display: block;
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+  }
+  
+  .table {
+      width: 100%;
+      max-width: 100%;
+      margin-bottom: 1rem;
+      background-color: transparent;
+  }
+
+  .table th, .table td {
+      padding: 0.75rem;
+      vertical-align: top;
+      border-top: 1px solid #dee2e6;
+  }
+
+  .table thead th {
+      vertical-align: bottom;
+      border-bottom: 2px solid #dee2e6;
+  }
+
+  .table tbody + tbody {
+      border-top: 2px solid #dee2e6;
+  }
+
+  .table-sm th, .table-sm td {
+      padding: 0.3rem;
+  }
+
+  .table-bordered {
+      border: 1px solid #dee2e6;
+  }
+
+  .table-bordered th, .table-bordered td {
+      border: 1px solid #dee2e6;
+  }
+
+  .table-bordered thead th, .table-bordered thead td {
+      border-bottom-width: 2px;
+  }
+
+  .table-borderless th, .table-borderless td, .table-borderless thead th, .table-borderless tbody + tbody {
+      border: 0;
+  }
+
+  .table-striped tbody tr:nth-of-type(odd) {
+      background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  .table-hover tbody tr:hover {
+      background-color: rgba(0, 0, 0, 0.075);
+  }
+
+  .table-primary, .table-primary > th, .table-primary > td {
+      background-color: #b8daff;
+  }
+
+  .table-hover .table-primary:hover {
+      background-color: #9fcdff;
+  }
+
+  .table-hover .table-primary:hover > td, .table-hover .table-primary:hover > th {
+      background-color: #9fcdff;
+  }
+
+  .table-secondary, .table-secondary > th, .table-secondary > td {
+      background-color: #d6d8db;
+  }
+
+  .table-hover .table-secondary:hover {
+      background-color: #c8cbcf;
+  }
+
+  .table-hover .table-secondary:hover > td, .table-hover .table-secondary:hover > th {
+      background-color: #c8cbcf;
+  }
+
+  .table-success, .table-success > th, .table-success > td {
+      background-color: #c3e6cb;
+  }
+
+  .table-hover .table-success:hover {
+      background-color: #b1dfbb;
+  }
+
+  .table-hover .table-success:hover > td, .table-hover .table-success:hover > th {
+      background-color: #b1dfbb;
+  }
+
+  .table-info, .table-info > th, .table-info > td {
+      background-color: #bee5eb;
+  }
+
+  .table-hover .table-info:hover {
+      background-color: #abdde5;
+  }
+
+  .table-hover .table-info:hover > td, .table-hover .table-info:hover > th {
+      background-color: #abdde5;
+  }
+
+  .table-warning, .table-warning > th, .table-warning > td {
+      background-color: #ffeeba;
+  }
+
+  .table-hover .table-warning:hover {
+      background-color: #ffe8a1;
+  }
+
+  .table-hover .table-warning:hover > td, .table-hover .table-warning:hover > th {
+      background-color: #ffe8a1;
+  }
+
+  .table-danger, .table-danger > th, .table-danger > td {
+      background-color: #f5c6cb;
+  }
+
+  .table-hover .table-danger:hover {
+      background-color: #f1b0b7;
+  }
+
+  .table-hover .table-danger:hover > td, .table-hover .table-danger:hover > th {
+      background-color: #f1b0b7;
+  }
+
+  .table-light, .table-light > th, .table-light > td {
+      background-color: #fdfdfe;
+  }
+
+  .table-hover .table-light:hover {
+      background-color: #ececf6;
+  }
+
+  .table-hover .table-light:hover > td, .table-hover .table-light:hover > th {
+      background-color: #ececf6;
+  }
+
+  .table-dark, .table-dark > th, .table-dark > td {
+      background-color: #c6c8ca;
+  }
+
+  .table-hover .table-dark:hover {
+      background-color: #b9bbbe;
+  }
+
+  .table-hover .table-dark:hover > td, .table-hover .table-dark:hover > th {
+      background-color: #b9bbbe;
+  }
+
+  .table-active, .table-active > th, .table-active > td {
+      background-color: rgba(0, 0, 0, 0.075);
+  }
+
+  .table-hover .table-active:hover {
+      background-color: rgba(0, 0, 0, 0.075);
+  }
+
+  .table-hover .table-active:hover > td, .table-hover .table-active:hover > th {
+      background-color: rgba(0, 0, 0, 0.075);
+  }
+
+  .table .thead-dark th {
+      color: #fff;
+      background-color: #343a40;
+      border-color: #454d55;
+  }
+
+  .table .thead-light th {
+      color: #495057;
+      background-color: #e9ecef;
+      border-color: #dee2e6;
+  }
+
+  .table-dark {
+      color: #fff;
+      background-color: #343a40;
+  }
+
+  .table-dark th, .table-dark td, .table-dark thead th {
+      border-color: #454d55;
+  }
+
+  .table-dark.table-bordered {
+      border: 0;
+  }
+
+  .table-dark.table-striped tbody tr:nth-of-type(odd) {
+      background-color: rgba(255, 255, 255, 0.05);
+  }
+
+  .table-dark.table-hover tbody tr:hover {
+      background-color: rgba(255, 255, 255, 0.075);
+  }
+}
+

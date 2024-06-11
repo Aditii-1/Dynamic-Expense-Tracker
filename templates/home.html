@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+<style>
+    *{
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+    }
+    .headname{
+        font-size: 3rem;
+    }
+    .box{
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .para,.para > li{
+        font-size: 2rem;
+    }
+</style>
+{% block body %}
+<div class="cover-box">
+    <div class="s1">
+            <h1 class="headname">Welcome to Our Expense Tracker Web App</h1>
+            <div class="para welcome">
+                Our Expense Tracker Web App is designed to simplify the process of managing your finances effectively. With its intuitive interface and powerful features, tracking your expenses has never been easier.
+            </div>
+            <hr class="hr-line">
+            <h1 class="headname">Key Features</h1>
+            <div class="para">
+                <li><b>Easy Expense Entry</b> : Quickly add your expenses with just a few clicks. Enter details such as date, amount, category, and description effortlessly.</li>
+                <li><b>Customizable Categories</b> : Tailor your expense categories to suit your specific needs. Whether it's groceries, utilities, or entertainment, you can organize your expenses exactly how you want.</li>
+                <!-- <li><b>Budget Management</b> : Set monthly budgets for different expense categories and monitor your spending to stay within your financial limits.</li> -->
+                <li><b>Visual Insights</b> : Gain valuable insights into your spending habits with our interactive charts and graphs. Visual representations help you understand where your money is going at a glance.</li>
+                <li><b>Secure and Private</b> : Rest assured that your financial data is safe and secure with our robust security measures. We prioritize the privacy of your information.</li>
+            </div>
+            <hr class="hr-line">
+            <h1 class="headname">How It Works</h1>
+            <div class="para">
+                <li><b>Sign Up</b> : Create your account to get started. It only takes a few moments.</li>
+                <li><b>Add Expenses</b> : Start adding your expenses to the tracker. You can categorize them, add descriptions, and even upload receipts for reference.</li>
+                <li><b>Track Spending</b> : Monitor your spending habits and track your progress towards your budget goals. Our visualizations make it easy to see where your money is going.</li>
+                <li><b>Stay Informed</b> : Receive notifications when you're approaching your budget limits or when important payments are due. Never miss a bill again.</li>
+            </div>
+            <hr class="hr-line">
+            <h1 class="headname">Why Choose Our Expense Tracker</h1>
+            <div class="para">
+                <li><b>Simplicity</b> : Our user-friendly interface makes tracking expenses a breeze.</li>
+                <li><b>Flexibility</b> : Customize categories and budgets to suit your unique financial situation.</li>
+                <li><b>Insightful Reporting</b> : Gain valuable insights into your spending patterns to make informed financial decisions.</li>
+            </div>
+            <hr class="hr-line">
+        </div>
+    </div>
+{% endblock %}
