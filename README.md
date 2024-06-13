@@ -92,7 +92,7 @@ For detailed documentation about Flask ,visit
 
 ## 📌 Contributions
 
-**Dont forget to star ⭐ the repository!**
+**Don't forget to star ⭐ the repository!**
 
 Contributions make the open-source community an amazing place to learn, inspire, and create. Whether you're fixing bugs, adding new features, improving documentation, or spreading the word, your contributions are greatly appreciated.
 
