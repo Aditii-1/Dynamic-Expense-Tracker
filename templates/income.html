@@ -43,7 +43,7 @@
             </div>
         </div>
  
-        <table class="table table-hover">
+        <table class="table table-hover table-responsive">
             <tr>
                 <th><b>Description</b></th>
                 <th><b>Amount</b></th>
@@ -64,7 +64,6 @@
                 <td><a href="/delete_income/{{row.id}}" class="btn btn-danger btn-xs" onclick="return confirm('Are you sure to delete?')">Delete</a></td>
             </tr>
             {% endfor %}
-
             {% for row in incomes %}
             <div id="modaledit{{ row.id }}" class="modal fade">
                 <div class="modal-dialog">
