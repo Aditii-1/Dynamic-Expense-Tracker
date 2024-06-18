@@ -149,4 +149,4 @@ By following this roadmap, we aim to continuously improve the Expense Tracker an
 
 ## 📌 Feedback
 
-If you have any feedback, please reach out at aditigopinath2@gmail.com
+If you have any feedback, please reach out at **aditigopinath2@gmail.com**
