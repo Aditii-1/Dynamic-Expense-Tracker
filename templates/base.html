@@ -13,7 +13,7 @@
         <title>{% block title %} Expense Tracker {% endblock %}</title>
     </head>
     <body class="base-body">
-        <nav>
+        <nav class="nav">
             <div class="main-nav">
                 <div><a class="logo" href="{{ url_for('home') }}">Expense Tracker</a></div>
                 {% if user.is_authenticated %}
