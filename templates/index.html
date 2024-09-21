@@ -63,9 +63,9 @@
                 <td>{{ row.date }}</td>
                 <td>{{ row.category }}</td>
                 <td>{{ row.pay_mode }}</td>
-                <td><a href="#modaledit{{ row.id }}" class="btn btn-warning btn-xs" data-toggle="modal">Edit</a></td>
+                <td><a href="#modaledit{{ row.id }}" class="btn btn-warning btn-xs w-100" data-toggle="modal">Edit</a></td>
 
-                <td><a href="/delete/{{row.id}}" class="btn btn-danger btn-xs" onclick="return confirm('Are you sure to delete?')">Delete</a></td>
+                <td><a href="/delete/{{row.id}}" class="btn btn-danger btn-xs w-100" onclick="return confirm('Are you sure to delete?')">Delete</a></td>
             </tr>
             {% endfor %}
 

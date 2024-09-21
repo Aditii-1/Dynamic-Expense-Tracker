@@ -279,9 +279,9 @@ div.row {
     align-items: center;
     
     position: fixed;
-    top: 70px;
+    top: 100px;
     right: 1rem;
-    z-index: 100;
+    z-index: 100000;
 
     border-radius: 10px;
   }
@@ -365,10 +365,11 @@ div.row {
   }
 }
 
-@media (min-width: 320px) {
+@media (min-width: 319px) {
   .btn-fn, .btn {
-    width: 20%;
+    width: 40%;
     margin-bottom: 10px;
+    font-size: small;
   }
 }
 /* Extra small devices (phones, less than 576px) */
