@@ -10,33 +10,43 @@ from flask_login import UserMixin, LoginManager, login_user, logout_user, login_
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
 
+# App configurations
 app.secret_key = "bap026a029a301n539v"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'db.sqlite3')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
+# Login manager setup
 login_manager = LoginManager(app)
+login_manager.login_view = 'login'
+
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+
+# User model
 class User(UserMixin, db.Model):
+    __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(50), unique=True, nullable=False)
     username = db.Column(db.String(100), nullable=False)
     password = db.Column(db.String(100), nullable=False)
     db_path = db.Column(db.String(200), nullable=False)
     data = db.relationship('Data', backref='user', lazy=True)
-    
+
     def __init__(self, email, username, password, db_path):
         self.email = email
         self.username = username
         self.password = password
         self.db_path = db_path
 
+
+# Data model
 class Data(db.Model):
+    __tablename__ = 'data'
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String(100), nullable=False)
     amount = db.Column(db.Float, nullable=False)
@@ -55,29 +65,32 @@ class Data(db.Model):
         self.tran_type = tran_type
         self.user_id = user_id
 
+
+# Function to switch databases based on the user's db_path
 def switch_db(db_path):
     new_uri = f'sqlite:///{db_path}'
     if app.config['SQLALCHEMY_DATABASE_URI'] != new_uri:
         app.config['SQLALCHEMY_DATABASE_URI'] = new_uri
         db.engine.dispose()
-        db.session.configure(bind=db.create_engine(new_uri))
+        db.session.configure(bind=create_engine(new_uri))
 
+
+# Function to create all tables
 def create_tables():
     with app.app_context():
         try:
             db.create_all()
         except Exception as e:
-            print(f"Error: {e}")
-            
-if __name__ == "__main__":
-    create_tables()
-    app.run(debug=True)
+            print(f"Error creating tables: {e}")
 
+
+# Route to home page
 @app.route('/')
 def home():
     return render_template("home.html", user=current_user)
 
-    
+
+# Login route
 @app.route("/login", methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
@@ -97,12 +110,16 @@ def login():
 
     return render_template("login.html", user=current_user)
 
+
+# Logout route
 @app.route("/logout")
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('home'))
 
+
+# Signup route
 @app.route("/sign-up", methods=["GET", "POST"])
 def sign_up():
     if request.method == "POST":
@@ -133,12 +150,15 @@ def sign_up():
 
     return render_template("signup.html", user=current_user)
 
+
+# Initialize new user's database
 def init_user_db(db_path):
-    from sqlalchemy import create_engine
-    engine = create_engine("mysql+mysqldb://u:p@host/db", pool_size=10, max_overflow=20)
+    engine = create_engine(f'sqlite:///{db_path}')
     with engine.connect() as connection:
         Data.metadata.create_all(connection)
 
+
+# Insert new expense
 @app.route('/insert', methods=['POST'])
 @login_required
 def insert():
@@ -161,6 +181,8 @@ def insert():
         except Exception as e:
             return f'An error occurred: {str(e)}'
 
+
+# Insert new income
 @app.route('/insert_income', methods=['POST'])
 @login_required
 def insert_income():
@@ -183,6 +205,38 @@ def insert_income():
         except Exception as e:
             return f'An error occurred: {str(e)}'
 
+
+# Index page for expenses
+@app.route('/Index')
+@login_required
+def Index():
+    switch_db(current_user.db_path)
+    expenses_data = Data.query.filter_by(tran_type='expense', user_id=current_user.id).all()
+    return render_template("index.html", expenses=expenses_data, user=current_user)
+
+
+# Income page
+@app.route('/income')
+@login_required
+def income():
+    switch_db(current_user.db_path)
+    income_data = Data.query.filter_by(tran_type='income', user_id=current_user.id).all()
+    return render_template("income.html", incomes=income_data, user=current_user)
+
+
+# Transaction summary
+@app.route('/transactions')
+@login_required
+def transactions():
+    switch_db(current_user.db_path)
+    total_income = db.session.query(func.sum(Data.amount)).filter_by(tran_type='income', user_id=current_user.id).scalar() or 0
+    total_expense = db.session.query(func.sum(Data.amount)).filter_by(tran_type='expense', user_id=current_user.id).scalar() or 0
+    balance = total_income - total_expense
+    transactions = Data.query.filter_by(user_id=current_user.id).all()
+    return render_template("transactions.html", balance=balance, income_amount=total_income, expense_amount=total_expense, transactions=transactions, user=current_user)
+
+
+# Update expense
 @app.route('/update/<int:expense_id>', methods=['POST'])
 @login_required
 def update(expense_id):
@@ -198,77 +252,10 @@ def update(expense_id):
         db.session.commit()
         flash("Expense updated successfully")
     else:
-        flash("Expense not found")
+        flash("Error in updating")
     return redirect(url_for('Index'))
 
 
-@app.route('/update_income/<int:income_id>', methods=['POST'])
-@login_required
-def update_income(income_id):
-    switch_db(current_user.db_path)
-    my_data1 = Data.query.get(income_id)
-    if my_data1:
-        my_data1.description = request.form['description']
-        my_data1.amount = float(request.form['amount'])
-        my_data1.date = datetime.strptime(request.form['date'], '%Y-%m-%d').date()
-        my_data1.category = request.form['category']
-        my_data1.pay_mode = request.form['pay_mode']
-        my_data1.tran_type = 'income'
-        db.session.commit()
-        flash("Income data updated successfully")
-    else:
-        flash("Income data not found")
-    return redirect(url_for('income'))
-
-
-@app.route('/delete/<int:id>/', methods=['GET', 'POST'])
-@login_required
-def delete(id):
-    switch_db(current_user.db_path)
-    my_data = Data.query.get(id)
-    if my_data:
-        db.session.delete(my_data)
-        db.session.commit()
-        flash("Deleted successfully!")
-    else:
-        flash("Data not found!")
-    return redirect(url_for('Index'))
-
-@app.route('/delete_income/<int:id>/', methods=['GET', 'POST'])
-@login_required
-def delete_income(id):
-    switch_db(current_user.db_path)
-    my_data = Data.query.get(id)
-    if my_data:
-        db.session.delete(my_data)
-        db.session.commit()
-        flash("Income data deleted successfully!")
-    else:
-        flash("Income data not found!")
-    return redirect(url_for('income'))
-
-@app.route('/income')
-@login_required
-def income():
-    switch_db(current_user.db_path)
-    income_data = Data.query.filter_by(tran_type='income', user_id=current_user.id).all()
-    return render_template("income.html", incomes=income_data, user=current_user)
-
-@app.route('/Index')
-@login_required
-def Index():
-    switch_db(current_user.db_path)
-    expenses_data = Data.query.filter_by(tran_type='expense', user_id=current_user.id).all()
-    return render_template("index.html", expenses=expenses_data, user=current_user)
-
-@app.route('/transactions')
-@login_required
-def transactions():
-    switch_db(current_user.db_path)
-    total_income = db.session.query(func.sum(Data.amount)).filter_by(tran_type='income', user_id=current_user.id).scalar() or 0
-    total_expense = db.session.query(func.sum(Data.amount)).filter_by(tran_type='expense', user_id=current_user.id).scalar() or 0
-    balance = total_income - total_expense
-    transactions = Data.query.filter_by(user_id=current_user.id).all()
-    return render_template("transactions.html", balance=balance, income_amount=total_income, expense_amount=total_expense, transactions=transactions, user=current_user)
-
-
+if __name__ == "__main__":
+    create_tables()
+    app.run(debug=True)
