@@ -1,0 +1,8 @@
+version: 1
+services:
+  - type: web
+    name: FinSecure
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    env: flask
