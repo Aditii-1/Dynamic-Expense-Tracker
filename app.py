@@ -68,8 +68,7 @@ def create_tables():
 @app.route('/')
 def home():
     return render_template("home.html", user=current_user)
-if __name__ == '__main__':
-    app.run()
+
     
 @app.route("/login", methods=['POST', 'GET'])
 def login():
