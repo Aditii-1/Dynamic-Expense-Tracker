@@ -68,6 +68,10 @@ def create_tables():
             db.create_all()
         except Exception as e:
             print(f"Error: {e}")
+            
+if __name__ == "__main__":
+    create_tables()
+    app.run(debug=True)
 
 @app.route('/')
 def home():
@@ -267,6 +271,4 @@ def transactions():
     transactions = Data.query.filter_by(user_id=current_user.id).all()
     return render_template("transactions.html", balance=balance, income_amount=total_income, expense_amount=total_expense, transactions=transactions, user=current_user)
 
-if __name__ == "__main__":
-    create_tables()
-    app.run(debug=True)
+
