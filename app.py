@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, flash, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine
 import os
 from datetime import datetime
 from sqlalchemy import func
@@ -130,7 +131,7 @@ def sign_up():
 
 def init_user_db(db_path):
     from sqlalchemy import create_engine
-    engine = create_engine(f'sqlite:///{db_path}')
+    engine = create_engine("mysql+mysqldb://u:p@host/db", pool_size=10, max_overflow=20)
     with engine.connect() as connection:
         Data.metadata.create_all(connection)
 
