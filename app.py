@@ -63,7 +63,10 @@ def switch_db(db_path):
 
 def create_tables():
     with app.app_context():
-        db.create_all()
+        try:
+            db.create_all()
+        except Exception as e:
+            print(f"Error: {e}")
 
 @app.route('/')
 def home():
