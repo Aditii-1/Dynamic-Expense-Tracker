@@ -29,5 +29,4 @@ thread==2.0.3
 tornado==6.4.1
 urllib3_secure_extra==0.1.0
 Werkzeug==3.0.3
-xmlrpclib==1.0.1
 zstandard==0.22.0
