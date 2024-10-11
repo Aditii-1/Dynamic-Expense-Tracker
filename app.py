@@ -7,7 +7,7 @@ from sqlalchemy import func
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, LoginManager, login_user, logout_user, login_required, current_user
 
-# Import pymysql and set it as MySQLdb
+
 import pymysql
 pymysql.install_as_MySQLdb()
 
