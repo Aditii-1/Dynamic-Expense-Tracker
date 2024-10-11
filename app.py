@@ -7,6 +7,10 @@ from sqlalchemy import func
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, LoginManager, login_user, logout_user, login_required, current_user
 
+# Import pymysql and set it as MySQLdb
+import pymysql
+pymysql.install_as_MySQLdb()
+
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -72,6 +76,13 @@ def create_tables():
 @app.route('/')
 def home():
     return render_template("home.html", user=current_user)
+
+# New function for MySQL connection
+def init_user_db(db_path):
+    # Using pymysql for MySQL connection
+    engine = create_engine("mysql+pymysql://u:p@host/db", pool_size=10, max_overflow=20)
+    # You can add further operations with the engine here
+
 
     
 @app.route("/login", methods=['POST', 'GET'])
