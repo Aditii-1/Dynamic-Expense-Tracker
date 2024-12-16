@@ -5,59 +5,63 @@
 <div class="container">
     <div class="row">
         <div id="mymodal">
-        <div class="balance_box bal">
-        <h2>&#128176;BALANCE</h2>
-        <p class="balance-amt">{{ balance }}</p>
-    </div>
-    <div class="balance_box balance_section">
-        <div class="income-box">
-            <h2>&#128178;INCOME</h2>
-            <p class="income-amt">{{ income_amount }}</p>
+            <div class="balance_box bal">
+                <h2>&#128176;BALANCE</h2>
+                <p class="balance-amt">{{ balance }}</p>
+            </div>
+            <div class="balance_box balance_section">
+                <div class="income-box">
+                    <h2>&#128178;INCOME</h2>
+                    <p class="income-amt">{{ income_amount }}</p>
+                </div>
+
+                <div class="expense-box">
+                    <h2>&#128179;EXPENSE</h2>
+                    <p class="expense-amt">{{ expense_amount }}</p>
+                </div>
+            </div>
+
+            <hr class="balance_divider">
+
+            <h2>HISTORY</h2>
+            <table class="table table-hover table-responsive">
+                <tr>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Category</th>
+                    <th>Pay-Mode</th>
+                    <th>Type</th>
+                </tr>
+                {% for row in transactions %}
+                <tr>
+                    <td>{{ row.description }}</td>
+                    <td>
+                        {% if row.tran_type == 'income' %}
+                        <span class="amt_in">+ {{ row.amount }}</span>
+                        {% else %}
+                        <span class="amt_ex">- {{ row.amount }}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ row.date }}</td>
+                    <td>{{ row.category }}</td>
+                    <td>{{ row.pay_mode }}</td>
+                    <td>{{ row.tran_type }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+
+            <!-- Charts Container -->
+            <div class="chart-grid">
+                <canvas id="histogram" width="50" height="50"></canvas> 
+                <canvas id="lineChart" width="0" height="50"></canvas>
+                <canvas id="pieChart" width="50" height="50"></canvas> 
+                <canvas id="radarChart" width="50" height="50"></canvas>
+            </div>
         </div>
-
-        <div class="expense-box">
-            <h2>&#128179;EXPENSE</h2>
-            <p class="expense-amt">{{ expense_amount }}</p>
-        </div>
     </div>
+</div>
 
-    <hr class="balance_divider">
-
-    <h2>HISTORY</h2>
-    <table class="table table-hover table-responsive">
-        <tr>
-            <th>Description</th>
-            <th>Amount</th>
-            <th>Date</th>
-            <th>Category</th>
-            <th>Pay-Mode</th>
-            <th>Type</th>
-        </tr>
-        {% for row in transactions %}
-        <tr>
-            <td>{{ row.description }}</td>
-            <td>
-                {% if row.tran_type == 'income' %}
-                <span class="amt_in">+ {{ row.amount }}</span>
-                {% else %}
-                <span class="amt_ex">- {{ row.amount }}</span>
-                {% endif %}
-            </td>
-            <td>{{ row.date }}</td>
-            <td>{{ row.category }}</td>
-            <td>{{ row.pay_mode }}</td>
-            <td>{{ row.tran_type }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-
-    <!-- Add Chart.js Histogram -->
-    <!-- Add Chart.js Histogram -->
-    <canvas id="histogram" width="4" height="2"></canvas>
-</div>
-</div>
-</div>
-</div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -65,40 +69,191 @@
         var data = {
             labels: [{% for row in transactions %}"{{ row.category }}", {% endfor %}],
             datasets: [{
-                label: 'Amount',
                 data: [{% for row in transactions %}{{ row.amount }}, {% endfor %}],
                 backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)', // Red
-                    'rgba(54, 162, 235, 0.2)', // Blue
-                    'rgba(255, 206, 86, 0.2)', // Yellow
-                    'rgba(75, 192, 192, 0.2)', // Green
+                    'rgba(255, 99, 132, 0.5)', // Red
+                    'rgba(54, 162, 235, 0.5)', // Blue
+                    'rgba(255, 206, 86, 0.5)', // Yellow
+                    'rgba(75, 192, 192, 0.5)', // Green
                     // Add more colors as needed
                 ],
                 borderColor: 'rgba(0, 0, 0, 1)',
                 borderWidth: 1
             }]
         };
-
+    
         // Set up options for histogram
         var options = {
             scales: {
-                yAxes: [{
+                y: {
                     ticks: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        font: {
+                            size: 16 // Increase Y-axis label size
+                        }
                     }
-                }]
+                },
+                x: {
+                    ticks: {
+                        font: {
+                            size: 25 // Increase X-axis label size
+                        }
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        font: {
+                            size: 35 // Increase legend label size
+                        }
+                    }
+                }
             }
         };
-
+    
         // Get canvas element
         var ctx = document.getElementById('histogram').getContext('2d');
-
+    
         // Create histogram
         var myChart = new Chart(ctx, {
             type: 'bar',
             data: data,
             options: options
         });
+    
+        // Example data for line chart
+        var lineData = {
+            labels: [{% for row in transactions %}"{{ row.date }}", {% endfor %}], // Dates for each transaction
+            datasets: [{
+                label: 'Transaction Amount',
+                data: [{% for row in transactions %}{{ row.amount }}, {% endfor %}],
+                fill: false, // No fill
+                borderColor: 'rgba(255, 99, 132, 1)', // Line color
+                borderWidth: 2,
+                tension: 0.1 // Smoothness of the line
+            }]
+        };
+    
+        // Line chart options
+        var lineOptions = {
+            scales: {
+                y: {
+                    ticks: {
+                        beginAtZero: true,
+                        font: {
+                            size: 16 // Increase Y-axis label size
+                        }
+                    }
+                },
+                x: {
+                    ticks: {
+                        font: {
+                            size: 16 // Increase X-axis label size
+                        }
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        font: {
+                            size: 35 // Increase legend label size
+                        }
+                    }
+                }
+            }
+        };
+    
+        // Get canvas element for line chart
+        var lineCtx = document.getElementById('lineChart').getContext('2d');
+    
+        // Create line chart
+        var myLineChart = new Chart(lineCtx, {
+            type: 'line',
+            data: lineData,
+            options: lineOptions
+        });
+    
+        // Get data for pie chart
+        var pieData = {
+            labels: [{% for row in transactions %}"{{ row.category }}", {% endfor %}],
+            datasets: [{
+                data: [{% for row in transactions %}{{ row.amount }}, {% endfor %}],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.6)', // Red
+                    'rgba(54, 162, 235, 0.6)', // Blue
+                    'rgba(255, 206, 86, 0.6)', // Yellow
+                    'rgba(75, 192, 192, 0.6)', // Green
+                    // Add more colors as needed
+                ]
+            }]
+        };
+    
+        // Get canvas element for pie chart
+        var pieCtx = document.getElementById('pieChart').getContext('2d');
+    
+        // Create pie chart
+        var pieChart = new Chart(pieCtx, {
+            type: 'pie',
+            data: pieData,
+            options: {
+                plugins: {
+                    legend: {
+                        labels: {
+                            font: {
+                                size: 35 // Increase legend label size
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    
+        // Example data for radar chart
+        var radarData = {
+            labels: [{% for row in transactions %}"{{ row.category }}", {% endfor %}],
+            datasets: [{
+                label: 'Transaction Amounts',
+                data: [{% for row in transactions %}{{ row.amount }}, {% endfor %}],
+                backgroundColor: 'rgba(75, 192, 192, 0.2)', // Fill color
+                borderColor: 'rgba(75, 192, 192, 1)', // Border color
+                borderWidth: 2
+            }]
+        };
+    
+        // Radar chart options
+        var radarOptions = {
+            scale: {
+                ticks: {
+                    beginAtZero: true,
+                    font: {
+                        size: 14 // Increase scale label size for radar chart
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        font: {
+                            size: 35 // Increase legend label size
+                        }
+                    }
+                }
+            }
+        };
+    
+        // Get canvas element for radar chart
+        var radarCtx = document.getElementById('radarChart').getContext('2d');
+    
+        // Create radar chart
+        var myRadarChart = new Chart(radarCtx, {
+            type: 'radar',
+            data: radarData,
+            options: radarOptions
+        });
+    
     });
+    
 </script>
 {% endblock %}

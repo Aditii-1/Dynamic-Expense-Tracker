@@ -1,0 +1,50 @@
+/* Content-specific styles, targeting only fraud-container */
+.fraud-container {
+  background-color: #f8f9fa;
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.fraud-container h2 {
+  text-align: center;
+  color: #250a91;
+  margin-top: 20px;
+}
+
+.fraud-container form {
+  margin-top: 20px;
+}
+
+.fraud-container label {
+  font-weight: bold;
+  color: #000000;
+}
+
+.fraud-container input {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0 15px 0;
+  box-sizing: border-box;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+}
+
+.fraud-container button {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.fraud-container #prediction {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 18px;
+  color: #28a745;
+}

@@ -124,3 +124,13 @@ __pycache__/
 __pycache__/
 
 >>>>>>> b92782dafa1a3c71fdf80f4ad68c142925bae549
+
+# Cache files
+__pycache__
+.ipynb_checkpoints
+
+# Dataset
+*.csv
+
+# Virtual environment
+myenv

@@ -1,10 +1,14 @@
 {% extends 'base.html' %}
+
 {% block body %}
 <div class="container">
     <div class="row">
         <div id="mymodal">
-            <div class="modal-content"> 
-                <form action="{{ url_for('insert') }}" method="POST">
+            <div class="modal-content">
+                
+                <form id="expenseForm" action="{{ url_for('insert') }}" method="POST">
+                    <input type="hidden" id="availableBalance" value="{{ available_balance }}">
+
                     <div class="form-group">
                         <label><b>Description:</b></label>
                         <input type="hidden" name="id" value="id">
@@ -12,7 +16,7 @@
                     </div>
                     <div class="form-group">
                         <label><b>Amount:</b></label>
-                        <input type="number" class="form-control" name="amount" placeholder="Enter amount" required="1"/>
+                        <input type="number" class="form-control" name="amount" placeholder="Enter amount" required="1" id="amount"/>
                     </div>
                     <div class="form-group">
                         <label><b>Date:</b></label>
@@ -39,8 +43,16 @@
                             <option value="Online banking">Online Banking</option>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label><b>New Balance:</b></label>
+                        <input type="number" class="form-control" name="new_balance" placeholder="Enter new balance" required="1"/>
+                    </div>
+
+                    <!-- Add hidden field for tran_type -->
+                    <input type="hidden" name="tran_type" value="expense" /> <!-- This ensures the transaction is recorded as an expense -->
+
                     <div class="sub">
-                        <button class="btn-fn" type="submit">Add Expenses</button>
+                        <button class="btn-fn" type="submit"><b>Add Expenses</b></button>
                     </div>
                 </form>
             </div>
@@ -53,6 +65,9 @@
                 <th><b>Date</b></th>
                 <th><b>Category</b></th>
                 <th><b>Pay-Mode</b></th>
+                <th><b>Bank Balance</b></th>
+                <th><b>Fraud ?</b></th>
+                <th><b>Transaction_Time</b></th>
                 <th><b>Edit</b></th>
                 <th><b>Delete</b></th>
             </tr>
@@ -63,69 +78,79 @@
                 <td>{{ row.date }}</td>
                 <td>{{ row.category }}</td>
                 <td>{{ row.pay_mode }}</td>
+                <td>{{ row.new_balance }}</td>
+                <td>
+                    {% if row.fraud %}
+                      <span style="color: red;">Yes</span>
+                    {% else %}
+                      <span style="color: green;">No</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {{ row.transaction_time.strftime('%H:%M:%S') }}
+                </td>
                 <td><a href="#modaledit{{ row.id }}" class="btn btn-warning btn-xs w-100" data-toggle="modal">Edit</a></td>
-
-                <td><a href="/delete/{{row.id}}" class="btn btn-danger btn-xs w-100" onclick="return confirm('Are you sure to delete?')">Delete</a></td>
+                <td><a href="/delete/{{ row.id }}" class="btn btn-danger btn-xs w-100" onclick="return confirm('Are you sure to delete?')">Delete</a></td>
             </tr>
             {% endfor %}
 
             {% for row in expenses %}
-<div id="modaledit{{ row.id }}" class="modal fade">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Update Expenses</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form action="{{ url_for('update', expense_id=row.id) }}" method="POST">
-                    <div class="form-group">
-                        <label><b>Description:</b></label>
-                        <input type="text" class="form-control" name="description" value="{{ row.description }}">
-                    </div>
-                    <div class="form-group">
-                        <label><b>Amount:</b></label>
-                        <input type="number" class="form-control" name="amount" value="{{ row.amount }}">
-                    </div>
-                    <div class="form-group">
-                        <label><b>Date:</b></label>
-                        <input type="date" class="form-control" name="date" value="{{ row.date }}">
-                    </div>
-                    <div class="form-group">
-                        <label><b>Category:</b></label>
-                        <select class="form-control" name="category">
-                            <option value="Food" {% if row.category == "Food" %}selected{% endif %}>Food</option>
-                            <option value="Entertainment" {% if row.category == "Entertainment" %}selected{% endif %}>Entertainment</option>
-                            <option value="Business" {% if row.category == "Business" %}selected{% endif %}>Business</option>
-                            <option value="Education" {% if row.category == "Education" %}selected{% endif %}>Education</option>
-                            <option value="Clothes" {% if row.category == "Clothes" %}selected{% endif %}>Clothes</option>
-                            <option value="Other" {% if row.category == "Other" %}selected{% endif %}>Other</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label><b>Pay-Mode:</b></label>
-                        <select class="form-control" name="pay_mode">
-                            <option value="Cash" {% if row.pay_mode == "Cash" %}selected{% endif %}>Cash</option>
-                            <option value="Debitcard" {% if row.pay_mode == "Debitcard" %}selected{% endif %}>Debitcard</option>
-                            <option value="Creditcard" {% if row.pay_mode == "Creditcard" %}selected{% endif %}>Creditcard</option>
-                            <option value="E-Payment" {% if row.pay_mode == "E-Payment" %}selected{% endif %}>E-Payment</option>
-                            <option value="Online banking" {% if row.pay_mode == "Online banking" %}selected{% endif %}>Online Banking</option>
-                        </select>
-                    </div>
-                    <div class="sub">
-                        <button type="submit" class="btn btn-warning">Update</button>
-                    </div>
-                </form>                
-            </div>
-        </div>
-    </div>
-</div>
-{% endfor %}
+            <div id="modaledit{{ row.id }}" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Update Expenses</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{ url_for('update', expense_id=row.id) }}" method="POST">
+                                <div class="form-group">
+                                    <label><b>Description:</b></label>
+                                    <input type="text" class="form-control" name="description" value="{{ row.description }}">
+                                </div>
+                                <div class="form-group">
+                                    <label><b>Date:</b></label>
+                                    <input type="date" class="form-control" name="date" value="{{ row.date }}">
+                                </div>
+                                <div class="form-group">
+                                    <label><b>Category:</b></label>
+                                    <select class="form-control" name="category">
+                                        <option value="Food" {% if row.category == "Food" %}selected{% endif %}>Food</option>
+                                        <option value="Entertainment" {% if row.category == "Entertainment" %}selected{% endif %}>Entertainment</option>
+                                        <option value="Business" {% if row.category == "Business" %}selected{% endif %}>Business</option>
+                                        <option value="Education" {% if row.category == "Education" %}selected{% endif %}>Education</option>
+                                        <option value="Clothes" {% if row.category == "Clothes" %}selected{% endif %}>Clothes</option>
+                                        <option value="Other" {% if row.category == "Other" %}selected{% endif %}>Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label><b>Pay-Mode:</b></label>
+                                    <select class="form-control" name="pay_mode">
+                                        <option value="Cash" {% if row.pay_mode == "Cash" %}selected{% endif %}>Cash</option>
+                                        <option value="Debitcard" {% if row.pay_mode == "Debitcard" %}selected{% endif %}>Debitcard</option>
+                                        <option value="Creditcard" {% if row.pay_mode == "Creditcard" %}selected{% endif %}>Creditcard</option>
+                                        <option value="E-Payment" {% if row.pay_mode == "E-Payment" %}selected{% endif %}>E-Payment</option>
+                                        <option value="Online banking" {% if row.pay_mode == "Online banking" %}selected{% endif %}>Online Banking</option>
+                                    </select>
+                                </div>
 
+                                <!-- Add hidden field for tran_type -->
+                                <input type="hidden" name="tran_type" value="expense" /> <!-- This ensures the transaction is recorded as an expense -->
+
+                                <div class="sub">
+                                    <button type="submit" class="btn btn-warning">Update</button>
+                                </div>
+                            </form>                
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
 
         </table>
     </div>
 </div>
+
 {% endblock %}

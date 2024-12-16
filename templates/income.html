@@ -8,6 +8,7 @@
                 <form action="{{ url_for('insert_income') }}" method="POST">
                     <div class="form-group">
                         <label><b>Description:</b></label>
+                        <input type="hidden" name="id" value="id">
                         <input type="text" class="form-control" name="description" placeholder="Enter description" required="1"/>
                     </div>
                     <div class="form-group">
@@ -36,8 +37,16 @@
                             <option value="Other">Other</option>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label><b>New Balance:</b></label>
+                        <input type="number" class="form-control" name="new_balance" placeholder="Enter new balance" required="1"/>
+                    </div>
+
+                    <!-- Add hidden field for tran_type -->
+                    <input type="hidden" name="tran_type" value="income" /> <!-- This ensures the transaction is recorded as an expense -->
+
                     <div class="sub">
-                        <button class="btn-fn" type="submit">Add Income</button>
+                        <button class="btn-fn" type="submit"><b>Add Income</b></button>
                     </div>
                 </form>
             </div>
@@ -50,6 +59,9 @@
                 <th><b>Date</b></th>
                 <th><b>Category</b></th>
                 <th><b>Pay-Mode</b></th>
+                <th><b>Bank Balance</b></th>
+                <th><b>Fraud ?</b></th>
+                <th><b>Transaction_Time</b></th>
                 <th><b>Edit</b></th>
                 <th><b>Delete</b></th>
             </tr>
@@ -60,6 +72,17 @@
                 <td>{{ row.date }}</td>
                 <td>{{ row.category }}</td>
                 <td>{{ row.pay_mode }}</td>
+                <td>{{ row.new_balance }}</td>
+                <td>
+                    {% if row.fraud %}
+                      <span style="color: red;">Yes</span>
+                    {% else %}
+                      <span style="color: green;">No</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {{ row.transaction_time.strftime('%H:%M:%S') }}
+                </td>
                 <td><a href="#" class="btn btn-warning btn-md w-100" data-toggle="modal" data-target="#modaledit{{ row.id }}">Edit</a></td>
                 <td><a href="/delete_income/{{row.id}}" class="btn btn-danger btn-md w-100" onclick="return confirm('Are you sure to delete?')">Delete</a></td>
             </tr>
@@ -78,10 +101,7 @@
                                     <label><b>Description:</b></label>
                                     <input type="text" class="form-control" name="description" value="{{ row.description }}">
                                 </div>
-                                <div class="form-group">
-                                    <label><b>Amount:</b></label>
-                                    <input type="number" class="form-control" name="amount" value="{{ row.amount }}">
-                                </div>
+                               
                                 <div class="form-group">
                                     <label><b>Date:</b></label>
                                     <input type="date" class="form-control" name="date" value="{{ row.date }}">
@@ -104,6 +124,10 @@
                                         <option value="Other" {% if row.pay_mode == 'Other' %}selected{% endif %}>Other</option>
                                     </select>
                                 </div>
+
+                                <!-- Add hidden field for tran_type -->
+                                <input type="hidden" name="tran_type" value="income" /> <!-- This ensures the transaction is recorded as an expense -->
+
                                 <div class="sub">
                                     <button class="btn btn-warning" type="submit">Update</button>
                                 </div>
